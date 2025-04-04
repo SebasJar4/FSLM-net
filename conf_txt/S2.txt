@@ -1,0 +1,60 @@
+enable
+erase start
+
+
+
+configure terminal
+
+! -- Configuraciones iniciales de el router (hostname, enable secret, baners)
+hostname S2
+enable secret 123
+banner motd 1 _ Si no estas autorizado para entrar aqui por favor sal inmediatamente :3 
+Estas conectado al dispositivo S2 ingresa por favor tus credenciales => _
+
+
+! -- Configuracion del acceso (username cisco, console 0, vty 0 4)
+username cisco privilege 15 secret 123
+line console 0
+login local
+logging synchronous
+line vty 0 4 
+login local
+logging synchronous
+exit
+
+
+! -- Vlans (Creacion de la vlan 99 y 100)
+vlan 100 
+name Agujero_negro
+
+
+interface vlan 100
+description Aloja los puertos inactivos
+exit
+
+
+! -- Configuracion de puertos
+interface range F0/1-2
+no shutdown
+exit
+
+!inutilizables
+interface range F0/3-24
+switchport mode access
+switchport acces vlan 100
+Description Puertos inactivos (Agujero_negro)
+shutdown
+exit
+
+no interface vlan 100
+
+
+
+end
+
+wr
+
+
+reload
+yes
+

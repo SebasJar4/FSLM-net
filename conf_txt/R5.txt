@@ -1,0 +1,72 @@
+enable
+erase start 
+
+
+configure terminal
+
+
+hostname R5
+enable secret cisco
+banner motd 1 - Si no estas autorizado para entrar aqui por favor sal inmediatamente :3 1
+banner login 1 Estas conectado al dispositivo R5 ingresa por favor tus credenciales => 1
+
+
+username cisco privilege 15 secret 123
+line console 0
+login local
+logging synchronous
+line vty 0 4 
+login local
+logging synchronous
+exit
+
+
+
+interface S0/1/1
+no shutdown
+exit
+
+interface range G0/0-1
+no shutdown
+exit 
+
+interface S0/1/0
+shutdown
+
+interface S0/1/1
+ip address 192.168.12.2 255.255.255.0
+description Conecta el R5 en el puerto S0/1/1 y la ip 192.168.12.2 con el R4 con el puerto S0/1/1 con la ip 192.168.12.1"
+interface G0/0
+ip address 192.168.2.1 255.255.255.0
+description Conecta el R5 en el puerto G0/0 y el gategay 192.168.2.1 con el S5 con el puerto G0/1 para el flujo de los 170 pcs"
+interface G0/1
+ip address 192.168.3.1 255.255.255.0
+description Conecta el R5 en el puerto G0/1 y el gategay 192.168.3.1 con el S5 con el puerto G0/2 para el flujo de los 110 pcs"
+
+exit
+
+
+!R1
+ip route 192.168.9.0  255.255.255.0  192.168.12.1
+ip route 172.18.0.0  255.255.0.0  192.168.12.1
+ip route 172.19.0.0  255.255.0.0  192.168.12.1
+!R2
+ip route 192.168.10.0  255.255.255.0 192.168.12.1 
+ip route 172.17.0.0  255.255.0.0  192.168.12.1
+ip route 192.168.5.0  255.255.255.0  192.168.12.1
+!R3
+ip route 192.168.1.0  255.255.255.0 192.168.12.1
+ip route 192.168.4.0  255.255.255.0 192.168.12.1
+
+ip route 192.168.11.0  255.255.255.0  192.168.12.1
+ip route 172.16.0.0  255.255.0.0  192.168.12.1
+ip route 172.20.0.0  255.255.0.0  192.168.12.1
+
+
+end
+
+wr
+
+reload
+yes
+
